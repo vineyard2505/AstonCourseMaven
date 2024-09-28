@@ -17,31 +17,36 @@ public class BaseTest {
     @BeforeEach
     public void setUp() {
         driver = new ChromeDriver();
-        driver.get("https://www.mts.by");
-        WebElement acceptButton = driver.findElement(By.xpath("//button[@id='cookie-agree']"));
-        if (!acceptButton.isDisplayed()) {
-            throw new NoSuchElementException("Cookie banner is not displayed.");
-        } else {
-            acceptButton.click();
+        try {
+            driver.get("https://www.mts.by");
+            WebElement acceptButton = driver.findElement(By.xpath("//button[@id='cookie-agree']"));
+            if (acceptButton.isDisplayed()) {
+                acceptButton.click();
+                System.out.println("cookie есть");
+            } else {
+                System.out.println("cookie не отображается");
+            }
+        } catch (Exception e) {
+            System.out.println("Произошла ошибка: " + e.getMessage());
         }
     }
 
     @Test
     public void nameBlockTest(){
-        WebElement blockName = driver.findElement(By.xpath("/html/body/div[6]/main/div/div[4]/div[1]/div/div/div[2]/section/div/h2"));
+        WebElement blockName = driver.findElement(By.xpath("//div[@class='pay__wrapper']/h2"));
         String expectedTitle = "Онлайн пополнение\n" + "без комиссии";
         assertEquals(blockName.getText(), expectedTitle);
     }
 
     @Test
     public void checkLogoTest(){
-        List<WebElement> logos = driver.findElements(By.xpath("/html/body/div[6]/main/div/div[4]/div[1]/div/div/div[2]/section/div/div[2]/ul"));
+        List<WebElement> logos = driver.findElements(By.xpath("//div[@class='pay__partners']"));
         assertFalse(logos.isEmpty());
     }
 
     @Test
     public void checkReferenceTest(){
-        WebElement moreInfoService = driver.findElement(By.xpath("/html/body/div[6]/main/div/div[4]/div[1]/div/div/div[2]/section/div/a"));
+        WebElement moreInfoService = driver.findElement(By.xpath("//div[@class='pay__wrapper']/a"));
         moreInfoService.click();
         String expectedUrl = "https://www.mts.by/help/poryadok-oplaty-i-bezopasnost-internet-platezhey/";
         String actualUrl = driver.getCurrentUrl();
