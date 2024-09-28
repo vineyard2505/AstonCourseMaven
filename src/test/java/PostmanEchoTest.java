@@ -7,14 +7,10 @@ public class PostmanEchoTest {
     public static final String BASE_URL = "https://postman-echo.com";
 
     @Test
-    public void postRawTextTest(){
-        String requestBody = "Hello, world!";
-
+    public void testGetRequest() {
         Response response = given()
-                .header("Content-Type", "application/json")
-                .body(requestBody)
                 .when()
-                .post(BASE_URL + "/post")
+                .get(BASE_URL + "/get")
                 .then()
                 .statusCode(200)
                 .extract().response();
@@ -23,10 +19,14 @@ public class PostmanEchoTest {
     }
 
     @Test
-    public void testGetRequest() {
+    public void postRawTextTest(){
+        String requestBody = "Hello, world!";
+
         Response response = given()
+                .header("Content-Type", "application/json")
+                .body(requestBody)
                 .when()
-                .get(BASE_URL + "/get")
+                .post(BASE_URL + "/post")
                 .then()
                 .statusCode(200)
                 .extract().response();
@@ -58,6 +58,21 @@ public class PostmanEchoTest {
                 .then()
                 .statusCode(200)
                 .extract().response();
+        String jsonResponse = response.asString();
+        System.out.println(jsonResponse);
+    }
+
+    @Test
+    public void testPatchRequest() {
+        Response response = given()
+                .header("Content-Type", "application/json")
+                .body("This is expected to be sent back as part of response body.")
+                .when()
+                .patch(BASE_URL + "/patch")
+                .then()
+                .statusCode(200)
+                .extract().response();
+
         String jsonResponse = response.asString();
         System.out.println(jsonResponse);
     }
